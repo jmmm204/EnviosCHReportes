@@ -47,11 +47,13 @@ public abstract class Paquete {
     @Depends("peso, tipoEnvio")
     @Stereotype("MONEY")
     public BigDecimal getCostoEnvio() {
+        // Si no hay peso, el costo es 0
         if (peso == 0) return BigDecimal.ZERO;
 
         double tarifaBase = 150.0;
         double multiplicador = 1.0;
 
+        // Determinamos el multiplicador según el tipo de envío
         if (tipoEnvio != null) {
             switch (tipoEnvio) {
                 case EXPRESS: multiplicador = 2.5; break;
@@ -60,13 +62,14 @@ public abstract class Paquete {
             }
         }
 
+        // Tarifa por libra: C$ 20.00
         double total = tarifaBase + (peso * 20 * multiplicador);
         return new BigDecimal(total);
     }
 
-    @AssertTrue(message = "Los envíos Express no pueden pesar más de 50kg por regulación aduanera")
+    @AssertTrue(message = "Los envíos Express no pueden pesar más de 100lb por regulación aduanera")
     private boolean isPesoValidoParaExpress() {
-        if (this.tipoEnvio == TipoEnvio.EXPRESS && this.peso > 50) {
+        if (this.tipoEnvio == TipoEnvio.EXPRESS && this.peso > 100) {
             return false;
         }
         return true;
@@ -75,12 +78,15 @@ public abstract class Paquete {
     @PrePersist
     @PreUpdate
     public void prepararGuardado() {
+        // Estandarizamos descripciones a mayusculas
         if (this.descripcion != null) {
             this.descripcion = this.descripcion.toUpperCase();
         }
 
+        // Control de inventario
         if (almacen == null || almacen.getId() == null) return;
 
+        // Consulta JPQL para contar paquetes actuales en la bodega destino
         String jpql = "select count(p) from Paquete p where p.almacen.id = :id";
         Long cantidadActual = (Long) XPersistence.getManager()
                 .createQuery(jpql)
@@ -90,8 +96,10 @@ public abstract class Paquete {
         boolean hayEspacio;
 
         if (this.getId() == null) {
+            // La cantidad actual debe ser menor al limite
             hayEspacio = cantidadActual < almacen.getCapacidad();
         } else {
+            // Se permite igualdad para no bloquear el propio paquete
             hayEspacio = cantidadActual <= almacen.getCapacidad();
         }
 

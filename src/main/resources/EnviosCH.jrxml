@@ -46,13 +46,15 @@
                 <textElement verticalAlignment="Middle"><font size="10" isBold="true"/></textElement>
                 <text><![CDATA[Descripción]]></text>
             </staticText>
+
             <staticText>
-                <reportElement x="110" y="0" width="45" height="30" forecolor="#FFFFFF"/>
+                <reportElement x="110" y="0" width="50" height="30" forecolor="#FFFFFF"/>
                 <textElement verticalAlignment="Middle"><font size="10" isBold="true"/></textElement>
-                <text><![CDATA[Peso]]></text>
+                <text><![CDATA[Peso (lb)]]></text>
             </staticText>
+
             <staticText>
-                <reportElement x="160" y="0" width="70" height="30" forecolor="#FFFFFF"/>
+                <reportElement x="165" y="0" width="65" height="30" forecolor="#FFFFFF"/>
                 <textElement verticalAlignment="Middle"><font size="10" isBold="true"/></textElement>
                 <text><![CDATA[Tipo]]></text>
             </staticText>
@@ -83,13 +85,13 @@
             </textField>
 
             <textField>
-                <reportElement x="110" y="0" width="45" height="20"/>
+                <reportElement x="110" y="0" width="50" height="20"/>
                 <textElement verticalAlignment="Middle"><font size="9"/></textElement>
-                <textFieldExpression><![CDATA[$F{peso} + " kg"]]></textFieldExpression>
+                <textFieldExpression><![CDATA[$F{peso} + " lb"]]></textFieldExpression>
             </textField>
 
             <textField>
-                <reportElement x="160" y="0" width="70" height="20"/>
+                <reportElement x="165" y="0" width="65" height="20"/>
                 <textElement verticalAlignment="Middle"><font size="9"/></textElement>
                 <textFieldExpression><![CDATA["" + $F{tipoEnvio}]]></textFieldExpression>
             </textField>
